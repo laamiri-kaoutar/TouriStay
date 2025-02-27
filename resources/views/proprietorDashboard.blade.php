@@ -36,10 +36,12 @@
                         <i class="fas fa-bell"></i>
                     </button>
                     <div class="ml-3 relative">
-                        <div class="flex items-center">
-                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                            <span class="ml-2 text-sm font-medium text-gray-700">John Smith</span>
-                        </div>
+                        <a href="{{ route('profile.edit') }}" class="block hover:opacity-80 transition-opacity">
+                            <div class="flex items-center">
+                                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                <span class="ml-2 text-sm font-medium text-gray-700">John Smith</span>
+                            </div>
+                        </a>
                     </div>
                     <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -200,49 +202,76 @@
             <!-- Property listings -->
             <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
                 <dl class="sm:divide-y sm:divide-gray-200">
+       
+             
                     <!-- Property 1 -->
-                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500 flex items-center">
-                            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property image" class="h-16 w-16 rounded-md object-cover mr-4">
-                            <div>
-                                <p class="font-medium text-indigo-600">Beach Villa in Bali</p>
-                                <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i>Bali, Indonesia</p>
-                            </div>
-                        </dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 flex flex-col justify-center">
-                            <div class="flex items-center">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    Active
-                                </span>
-                                <span class="ml-3 text-gray-500"><i class="fas fa-eye mr-1"></i> 482 views</span>
-                                <span class="ml-3 text-gray-500"><i class="fas fa-heart mr-1"></i> 32 favorites</span>
-                            </div>
-                            <div class="mt-2 text-gray-500">
-                                <span>$250/night <span class="mx-2">•</span> 3 bedrooms <span class="mx-2">•</span> 2 baths</span>
-                            </div>
-                        </dd>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 flex items-center justify-end">
-                            <div class="relative inline-block text-left">
-                                <button type="button" class="inline-flex items-center px-2 py-1 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="options-menu-1" aria-expanded="true" aria-haspopup="true">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                                <!-- Dropdown menu, show/hide based on menu state. -->
-                                <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10 hidden" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-1">
-                                    <div class="py-1" role="none">
-                                        <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">
-                                            <i class="fas fa-edit mr-2"></i> Edit Property
-                                        </a>
-                                        <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">
-                                            <i class="fas fa-eye mr-2"></i> View Details
-                                        </a>
-                                        <a href="#" class="text-red-600 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">
-                                            <i class="fas fa-trash mr-2"></i> Delete
-                                        </a>
+                    @foreach($user->annonces as $annonce)
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500 flex items-center">
+                                <img src="{{ asset('storage/' . $annonce->image) }}" alt="Property image" class="h-16 w-16 rounded-md object-cover mr-4">
+                                <div>
+                                    <p class="font-medium text-indigo-600">{{  $annonce->title }}</p>
+                                    <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1 "></i>{{ $annonce->location }}</p>
+                                    <p class="text-xs text-gray-500 mt-1"><i class="fas fa-building mr-1"></i>{{ ucfirst($annonce->type) }}</p>
+                                </div>
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 flex flex-col justify-center">
+                                <div class="flex items-center">
+                                    <!-- <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Active
+                                    </span> -->
+                                    <!-- <span class="ml-3 text-gray-500"><i class="fas fa-eye mr-1"></i> 482 views</span> -->
+                                    <span class="ml-3 text-gray-500"><i class="fas fa-heart mr-1 text-red-500"></i> 32 favorites</span>
+                                    @if($annonce->available_from && $annonce->available_to)
+                                    <span class="ml-3 text-gray-500"><i class="fas fa-calendar mr-1 text-indigo-600"></i> 
+                                        {{ \Carbon\Carbon::parse($annonce->available_from)->format('M d') }} - {{ \Carbon\Carbon::parse($annonce->available_to)->format('M d, Y') }}
+                                    </span>
+                                    @endif
+                                </div>
+                                <div class="mt-2 text-gray-500">
+                                    <span>${{ $annonce->price }}/night <span class="mx-2">•</span> {{ $annonce->rooms }} rooms <span class="mx-2">•</span> {{ $annonce->bathrooms }} bathrooms</span>
+                                </div>
+                                @if($annonce->description)
+                                <div class="mt-2 text-xs text-gray-500 line-clamp-1">
+                                    {{ Str::limit($annonce->description, 80) }}
+                                </div>
+                                @endif
+                            </dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 flex items-center justify-end">
+                                <div class="relative inline-block text-left">
+                                    <button type="button" class="inline-flex items-center px-2 py-1 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="options-menu-1" aria-expanded="true" aria-haspopup="true">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <!-- Dropdown menu, show/hide based on menu state. -->
+                                    <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10 hidden" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-1">
+                                        <div class="py-1" role="none">
+                                            <a href="{{ route('annonce.show', $annonce->id) }}" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">
+                                                <i class="fas fa-edit mr-2"></i> Edit Property
+                                            </a>
+                                            <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">
+                                                <i class="fas fa-eye mr-2"></i> View Details
+                                            </a>
+                                            <form action="{{ route('annonce.delete', $annonce->id) }}" method="post">
+                                                @csrf 
+                                                @method('Delete')
+                                                <button type="submit" class="text-red-600 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">
+                                                    <i class="fas fa-trash mr-2"></i> Delete
+                                                    
+                                                </button>
+
+                                            </form>
+                                            <!-- <a href="" class="text-red-600 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">
+                                                <i class="fas fa-trash mr-2"></i> Delete
+                                            </a> -->
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </dd>
-                    </div>
+                            </dd>
+                        </div>
+                    @endforeach
+
+                    
+
 
                     <!-- Property 2 -->
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -449,275 +478,191 @@
     </div>
 
     <!-- Create Announcement Modal -->
-    <div id="createAnnouncementModal" class="fixed z-20 inset-0 overflow-y-auto hidden">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <!-- Background overlay -->
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
 
-            <!-- Modal panel -->
-            <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full sm:p-6">
-                <div class="absolute top-0 right-0 pt-4 pr-4">
-                    <button type="button" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none" id="closeModal">
-                        <span class="sr-only">Close</span>
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <div>
-                    <div class="mt-3 text-center sm:mt-0 sm:text-left">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
-                            Create New Property Announcement
-                        </h3>
-
-                        <form class="space-y-6">
-                            <!-- Basic Information Section -->
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-3">Basic Information</h4>
-                                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                                    <div class="sm:col-span-4">
-                                        <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                                        <div class="mt-1">
-                                            <input type="text" name="title" id="title" placeholder="e.g. Beachfront Villa with Pool" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                        </div>
-                                    </div>
-
-                                    <div class="sm:col-span-2">
-                                        <label for="property-type" class="block text-sm font-medium text-gray-700">Property Type</label>
-                                        <div class="mt-1">
-                                            <select id="property-type" name="property-type" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                                <option>Villa</option>
-                                                <option>Apartment</option>
-                                                <option>House</option>
-                                                <option>Cottage</option>
-                                                <option>Cabin</option>
-                                                <option>Other</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="sm:col-span-6">
-                                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                                        <div class="mt-1">
-                                            <textarea id="description" name="description" rows="3" placeholder="Describe your property in detail" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"></textarea>
-                                        </div>
-                                        <p class="mt-2 text-sm text-gray-500">Brief description for your property. HTML is not allowed.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Location Section -->
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-3">Location</h4>
-                                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                                    <div class="sm:col-span-3">
-                                        <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
-                                        <div class="mt-1">
-                                            <select id="country" name="country" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                                <option value="US">United States</option>
-                                                <option value="CA">Canada</option>
-                                                <option value="MX">Mexico</option>
-                                                <option value="FR">France</option>
-                                                <option value="DE">Germany</option>
-                                                <option value="GB">United Kingdom</option>
-                                                <option value="IT">Italy</option>
-                                                <option value="ES">Spain</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="sm:col-span-3">
-                                        <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                                        <div class="mt-1">
-                                            <input type="text" name="city" id="city" placeholder="e.g. New York" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                        </div>
-                                    </div>
-
-                                    <div class="sm:col-span-6">
-                                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                                        <div class="mt-1">
-                                            <input type="text" name="address" id="address" placeholder="Street address" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                        </div>
-                                        <p class="mt-2 text-sm text-gray-500">This address will not be shown to guests until after booking.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Details & Pricing Section -->
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-3">Details & Pricing</h4>
-                                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                                    <div class="sm:col-span-1">
-                                        <label for="bedrooms" class="block text-sm font-medium text-gray-700">Bedrooms</label>
-                                        <div class="mt-1">
-                                            <select id="bedrooms" name="bedrooms" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5+</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="sm:col-span-1">
-                                        <label for="bathrooms" class="block text-sm font-medium text-gray-700">Bathrooms</label>
-                                        <div class="mt-1">
-                                            <select id="bathrooms" name="bathrooms" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5+</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="sm:col-span-1">
-                                        <label for="max-guests" class="block text-sm font-medium text-gray-700">Max Guests</label>
-                                        <div class="mt-1">
-                                            <select id="max-guests" name="max-guests" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="4">4</option>
-                                                <option value="6">6</option>
-                                                <option value="8">8</option>
-                                                <option value="10">10+</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="sm:col-span-3">
-                                        <label for="price" class="block text-sm font-medium text-gray-700">Price per night ($)</label>
-                                        <div class="mt-1 relative rounded-md shadow-sm">
-                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <span class="text-gray-500 sm:text-sm">$</span>
-                                            </div>
-                                            <input type="text" name="price" id="price" placeholder="0.00" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 sm:text-sm border-gray-300 rounded-md">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Amenities Section -->
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-3">Amenities</h4>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                                    <div class="relative flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="wifi" name="amenities[]" value="wifi" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="wifi" class="font-medium text-gray-700">WiFi</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="relative flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="pool" name="amenities[]" value="pool" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="pool" class="font-medium text-gray-700">Swimming Pool</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="relative flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="ac" name="amenities[]" value="ac" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="ac" class="font-medium text-gray-700">Air Conditioning</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="relative flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="kitchen" name="amenities[]" value="kitchen" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="kitchen" class="font-medium text-gray-700">Kitchen</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="relative flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="parking" name="amenities[]" value="parking" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="parking" class="font-medium text-gray-700">Free Parking</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="relative flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="tv" name="amenities[]" value="tv" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="tv" class="font-medium text-gray-700">TV</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Photos Section -->
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-3">Photos</h4>
-                                <div class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                                    <div class="space-y-1 text-center">
-                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                        <div class="flex text-sm text-gray-600">
-                                            <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                                <span>Upload files</span>
-                                                <input id="file-upload" name="file-upload" type="file" class="sr-only" multiple>
-                                            </label>
-                                            <p class="pl-1">or drag and drop</p>
-                                        </div>
-                                        <p class="text-xs text-gray-500">
-                                            PNG, JPG, GIF up to 10MB
-                                        </p>
-                                    </div>
-                                </div>
-                                <p class="mt-2 text-sm text-gray-500">Add multiple photos to showcase your property. First photo will be used as cover.</p>
-                            </div>
-
-                            <!-- Availability Section -->
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-3">Availability</h4>
-                                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                                    <div class="sm:col-span-3">
-                                        <label for="available-from" class="block text-sm font-medium text-gray-700">Available From</label>
-                                        <div class="mt-1">
-                                            <input type="date" name="available-from" id="available-from" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                        </div>
-                                    </div>
-
-                                    <div class="sm:col-span-3">
-                                        <label for="available-to" class="block text-sm font-medium text-gray-700">Available To</label>
-                                        <div class="mt-1">
-                                            <input type="date" name="available-to" id="available-to" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Submit Buttons -->
-                            <div class="flex justify-end">
-                                <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-3" id="cancelModal">
-                                    Cancel
-                                </button>
-                                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Create Announcement
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div id="createAnnouncementModal" class="fixed z-20 inset-0 overflow-y-auto hidden">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <!-- Background overlay -->
+    <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
     </div>
+
+    <!-- Modal panel -->
+    <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6">
+      <div class="absolute top-0 right-0 pt-4 pr-4">
+        <button type="button" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none" id="closeModal">
+          <span class="sr-only">Close</span>
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div>
+        <div class="mt-3 text-center sm:mt-0 sm:text-left">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+            Create New Property Announcement
+          </h3>
+
+          <form class="space-y-5" method="POST" enctype="multipart/form-data" action="{{ route('annonce.store') }}" >
+            @csrf
+            <!-- Basic Information Section -->
+            <div>
+              <h4 class="text-sm font-medium text-gray-700 mb-3">Basic Information</h4>
+              <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
+                <div class="sm:col-span-4">
+                  <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                  <div class="mt-1">
+                    <input type="text" name="title" id="title" placeholder="e.g. Beachfront Villa with Pool" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                  </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="type" class="block text-sm font-medium text-gray-700">Property Type</label>
+                  <div class="mt-1">
+                    <select id="type" name="type" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                      <option value="villa">Villa</option>
+                      <option value="appartement">Apartment</option>
+                      <option value="house">House</option>
+                      <option value="studio">Studio</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="sm:col-span-6">
+                  <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                  <div class="mt-1">
+                    <textarea id="description" name="description" rows="3" placeholder="Describe your property" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Location Section -->
+            <div>
+              <h4 class="text-sm font-medium text-gray-700 mb-3">Location</h4>
+              <div class="grid grid-cols-1 gap-y-4 sm:grid-cols-6">
+                <div class="sm:col-span-6">
+                  <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+                  <div class="mt-1">
+                    <input type="text" name="location" id="location" placeholder="City, Country" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Details & Pricing Section -->
+            <div>
+              <h4 class="text-sm font-medium text-gray-700 mb-3">Details & Pricing</h4>
+              <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
+                <div class="sm:col-span-1">
+                  <label for="rooms" class="block text-sm font-medium text-gray-700">Rooms</label>
+                  <div class="mt-1">
+                    <select id="rooms" name="rooms" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5+</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="sm:col-span-1">
+                  <label for="bathrooms" class="block text-sm font-medium text-gray-700">Bathrooms</label>
+                  <div class="mt-1">
+                    <select id="bathrooms" name="bathrooms" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5+</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="price" class="block text-sm font-medium text-gray-700">Price per night ($)</label>
+                  <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span class="text-gray-500 sm:text-sm">$</span>
+                    </div>
+                    <input type="number" name="price" id="price" placeholder="0.00" min="0" step="0.01" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-3 sm:text-sm border-gray-300 rounded-md">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Photo Section - Improved -->
+            <div>
+              <h4 class="text-sm font-medium text-gray-700 mb-3">Property Photo</h4>
+              <div class="mt-1">
+                <div id="photo-upload-container" class="border rounded-md bg-gray-50 overflow-hidden">
+                  <div id="no-image-view" class="p-4 flex flex-col items-center justify-center">
+                    <svg class="h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <div class="mt-2 text-center">
+                      <label for="image" class="cursor-pointer">
+                        <span class="mt-2 block text-sm font-medium text-indigo-600 hover:text-indigo-500">Select photo</span>
+                        <input id="image" name="image" type="file" class="sr-only" accept="image/*" onchange="previewImage(this)">
+                      </label>
+                      <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                    </div>
+                  </div>
+                  
+                  <div id="image-preview-container" class="hidden relative">
+                    <img id="image-preview" src="#" alt="Property preview" class="w-full h-48 object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <button type="button" onclick="removeImage()" class="bg-red-600 text-white p-1 rounded-full mr-2">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                      </button>
+                      <label for="image" class="bg-white text-gray-700 p-1 rounded-full cursor-pointer">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Availability Section -->
+            <div>
+              <h4 class="text-sm font-medium text-gray-700 mb-3">Availability</h4>
+              <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
+                <div class="sm:col-span-3">
+                  <label for="available_from" class="block text-sm font-medium text-gray-700">Available From</label>
+                  <div class="mt-1">
+                    <input type="date" name="available_from" id="available_from" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                  </div>
+                </div>
+
+                <div class="sm:col-span-3">
+                  <label for="available_to" class="block text-sm font-medium text-gray-700">Available To</label>
+                  <div class="mt-1">
+                    <input type="date" name="available_to" id="available_to" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Buttons -->
+            <div class="flex justify-end pt-2">
+              <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-3" id="cancelModal">
+                Cancel
+              </button>
+              <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Create Announcement
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>  
+  
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white mt-12">
@@ -849,6 +794,39 @@
                 });
             }
         });
+
+        function previewImage(input) {
+    const previewContainer = document.getElementById('image-preview-container');
+    const noImageView = document.getElementById('no-image-view');
+    const preview = document.getElementById('image-preview');
+    
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        previewContainer.classList.remove('hidden');
+        noImageView.classList.add('hidden');
+      }
+      
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      removeImage();
+    }
+  }
+  
+  function removeImage() {
+    const previewContainer = document.getElementById('image-preview-container');
+    const noImageView = document.getElementById('no-image-view');
+    const preview = document.getElementById('image-preview');
+    const fileInput = document.getElementById('image');
+    
+    preview.src = '';
+    fileInput.value = '';
+    previewContainer.classList.add('hidden');
+    noImageView.classList.remove('hidden');
+  }
+  
     </script>
 </body>
 </html>

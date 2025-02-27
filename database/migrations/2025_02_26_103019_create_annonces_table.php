@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('annonces', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2);
+            $table->string('location');
+            $table->date('available_from')->nullable();
+            $table->date('available_to')->nullable();
+            $table->integer('rooms')->nullable();
+            $table->string('image')->nullable();
+            $table->integer('bathrooms')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to users table
+            $table->enum('type', ['appartement', 'house', 'villa', 'studio']);
             $table->timestamps();
         });
     }

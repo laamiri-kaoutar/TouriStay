@@ -36,6 +36,13 @@ class UserFactory extends Factory
         ];
     }
 
+    public function owner()
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_id' => 2, // Set role_id to 2 for owner
+        ]);
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */

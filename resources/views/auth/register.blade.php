@@ -29,7 +29,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-user text-gray-400"></i>
                             </div>
-                                <input id="name" name="name" type="text" :value="old('name')"  required 
+                                <input id="name" name="name" type="text" value="{{ old('name') }}"  required 
                                 class="pl-10 block w-full pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 
                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
@@ -45,7 +45,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-envelope text-gray-400"></i>
                             </div>
-                            <input id="email" name="email" type="email" autocomplete="email" :value="old('email')" required 
+                            <input id="email" name="email" type="email" autocomplete="email" value="{{ old('email') }}" required 
                                 class="pl-10 block w-full pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
     
@@ -90,8 +90,13 @@
                             <select id="role_id" name="role_id" required
                                 class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                 <option value="">Select your role</option>
-                                <option value="1">Tourist</option>
-                                <option value="2    ">Property Owner</option>
+                                @foreach($roles as $role)
+                                @if($role->name !=='admin')
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                @endif
+                                @endforeach
+                                <!-- <option value="3">Tourist</option>
+                                <option value="1 ">Property Owner</option> -->
                             </select>
                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
 

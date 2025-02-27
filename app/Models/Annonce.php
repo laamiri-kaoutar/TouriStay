@@ -4,9 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
-class Annonces extends Model
+
+class Annonce extends Model
 {
     /** @use HasFactory<\Database\Factories\AnnoncesFactory> */
     use HasFactory;
+    protected $guarded= [];
+    
+    public function owner(){
+        return $this->belongsTo(User::class );
+    }
 }

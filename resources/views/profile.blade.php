@@ -84,7 +84,9 @@
 
             <!-- Profile Form Content -->
             <div class="p-4 sm:p-6">
-                <form action="#" method="POST">
+                <form method="post" action="{{ route('profile.update') }}">
+                    @csrf
+                    @method('patch')
                     <div class="space-y-6">
                         <!-- Personal Information Section -->
                         <div>
@@ -99,12 +101,16 @@
                                 <label for="name" class="block text-sm font-medium text-gray-700">Full name</label>
                                 <div class="mt-1">
                                     <input type="text" name="name" id="name" value="Sophie Taylor" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                    <x-input-error class="mt-2" :messages="$errors->get('name')" />
+
                                 </div>
                             </div>
 
                             <div class="sm:col-span-3">
                                 <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
                                 <div class="mt-1">
+                                    <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+
                                     <input type="text" name="role" id="role" value="Tourist" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md bg-gray-100" readonly>
                                 </div>
                             </div>
@@ -113,6 +119,8 @@
                                 <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
                                 <div class="mt-1">
                                     <input type="email" name="email" id="email" value="sophie.taylor@example.com" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                    <x-input-error class="mt-2" :messages="$errors->get('email')" />
+
                                 </div>
                             </div>
                         </div>
