@@ -37,8 +37,8 @@
                     </button>
                     <div class="ml-3 relative">
                         <div class="flex items-center">
-                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                            <span class="ml-2 text-sm font-medium text-gray-700">Sophie Taylor</span>
+                            <img class="h-8 w-8 rounded-full" src="{{ auth()->user()->image ? asset('storage/' . auth()->user()->image)  : 'https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg'}}" alt="">
+                            <span class="ml-2 text-sm font-medium text-gray-700">{{ auth()->user()->name}}</span>
                         </div>
                     </div>
                                <!-- Authentication -->
@@ -127,41 +127,49 @@
         </div>
     </div>
 
-    <!-- Search and Filters -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div class="flex flex-col md:flex-row items-center gap-4">
-            <!-- Simple Search Bar -->
-            <div class="w-full md:flex-1">
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400"></i>
-                    </div>
-                    <input type="text" placeholder="Search destinations, properties..." class="pl-10 block w-full border border-gray-300 rounded-md py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+  <!-- Search and Filters -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <form action="{{ route('touriste.dashboard') }}" method="Post" class="bg-white rounded-lg shadow-sm p-4">
+        @csrf
+        @method('GET')
+        <div class="flex flex-wrap md:flex-nowrap items-center gap-4">
+            <!-- Search Bar -->
+            <div class="w-full relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
                 </div>
+                <input 
+                    type="text" 
+                    name="search" 
+                    value="{{ request('search') }}"
+                    placeholder="Search by location, type, price..." 
+                    class="pl-10 block w-full border border-gray-300 rounded-md py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
             
-            <!-- Single Filter -->
-            <div class="w-full md:w-auto">
-                <select class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                    <option>All Properties</option>
-                    <option>Beachfront</option>
-                    <option>Mountain View</option>
-                    <option>City Center</option>
-                    <option>Countryside</option>
+            <!-- Right side controls: wrapped in a flex container -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <!-- Per Page Dropdown -->
+                <select 
+                    name="per_page"
+                    class="pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="6" {{ request('per_page') == 6 || !request('per_page') ? 'selected' : '' }}>6 per page</option>
+                    <option value="8" {{ request('per_page') == 8 ? 'selected' : '' }}>8 per page</option>
+                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10 per page</option>
                 </select>
-            </div>
-            
-            <!-- Items per page -->
-            <div class="w-full md:w-auto">
-                <select class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                    <option value="8">Show 8 per page</option>
-                    <option value="12">Show 12 per page</option>
-                    <option value="16">Show 16 per page</option>
-                    <option value="24">Show 24 per page</option>
-                </select>
+                
+                <!-- Search Button -->
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Search
+                </button>
+                
+                <!-- Reset Button -->
+                <a href="{{ route('touriste.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Reset
+                </a>
             </div>
         </div>
-    </div>
+    </form>
+</div>
 
     <!-- Results -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
@@ -169,256 +177,81 @@
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <!-- Property Card 1 -->
-            <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div class="relative h-52">
-                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Lakefront property" class="h-full w-full object-cover">
-                    <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between">
-                        <h3 class="text-lg font-semibold text-gray-900">Lakeside Cottage</h3>
-                        <div class="flex items-center">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="text-sm font-medium">4.9</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-1">Lake Tahoe, Nevada</p>
-                    <div class="flex items-center mt-2 text-sm text-gray-500">
-                        <i class="fas fa-bed mr-1"></i>
-                        <span>4 beds</span>
-                        <span class="mx-2">•</span>
-                        <i class="fas fa-bath mr-1"></i>
-                        <span>3 baths</span>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-base font-semibold text-gray-900">$220</span>
-                        <span class="text-sm text-gray-500"> / night</span>
-                    </div>
-                </div>
-            </div>
+      
 
-            <!-- Property Card 2 -->
-            <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div class="relative h-52">
-                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Beach house" class="h-full w-full object-cover">
-                    <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between">
-                        <h3 class="text-lg font-semibold text-gray-900">Beach Villa</h3>
-                        <div class="flex items-center">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="text-sm font-medium">4.8</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-1">Malibu, California</p>
-                    <div class="flex items-center mt-2 text-sm text-gray-500">
-                        <i class="fas fa-bed mr-1"></i>
-                        <span>3 beds</span>
-                        <span class="mx-2">•</span>
-                        <i class="fas fa-bath mr-1"></i>
-                        <span>2 baths</span>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-base font-semibold text-gray-900">$250</span>
-                        <span class="text-sm text-gray-500"> / night</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Property Card 3 -->
-            <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div class="relative h-52">
-                    <img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Mountain cabin" class="h-full w-full object-cover">
-                    <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between">
-                        <h3 class="text-lg font-semibold text-gray-900">Mountain Retreat</h3>
-                        <div class="flex items-center">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="text-sm font-medium">4.7</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-1">Aspen, Colorado</p>
-                    <div class="flex items-center mt-2 text-sm text-gray-500">
-                        <i class="fas fa-bed mr-1"></i>
-                        <span>2 beds</span>
-                        <span class="mx-2">•</span>
-                        <i class="fas fa-bath mr-1"></i>
-                        <span>1 bath</span>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-base font-semibold text-gray-900">$195</span>
-                        <span class="text-sm text-gray-500"> / night</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Property Card 4 -->
-            <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div class="relative h-52">
-                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="City apartment" class="h-full w-full object-cover">
-                    <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between">
-                        <h3 class="text-lg font-semibold text-gray-900">City Loft</h3>
-                        <div class="flex items-center">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="text-sm font-medium">4.6</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-1">New York, NY</p>
-                    <div class="flex items-center mt-2 text-sm text-gray-500">
-                        <i class="fas fa-bed mr-1"></i>
-                        <span>1 bed</span>
-                        <span class="mx-2">•</span>
-                        <i class="fas fa-bath mr-1"></i>
-                        <span>1 bath</span>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-base font-semibold text-gray-900">$175</span>
-                        <span class="text-sm text-gray-500"> / night</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Property Card 5 -->
-            <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div class="relative h-52">
-                    <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Luxury home" class="h-full w-full object-cover">
-                    <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between">
-                        <h3 class="text-lg font-semibold text-gray-900">Luxury Estate</h3>
-                        <div class="flex items-center">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="text-sm font-medium">4.9</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-1">Miami, Florida</p>
-                    <div class="flex items-center mt-2 text-sm text-gray-500">
-                        <i class="fas fa-bed mr-1"></i>
-                        <span>5 beds</span>
-                        <span class="mx-2">•</span>
-                        <i class="fas fa-bath mr-1"></i>
-                        <span>4 baths</span>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-base font-semibold text-gray-900">$350</span>
-                        <span class="text-sm text-gray-500"> / night</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Property Card 6 -->
-            <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div class="relative h-52">
-                    <img src="https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Suburban house" class="h-full w-full object-cover">
-                    <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between">
-                        <h3 class="text-lg font-semibold text-gray-900">Suburban Home</h3>
-                        <div class="flex items-center">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="text-sm font-medium">4.7</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-1">Austin, Texas</p>
-                    <div class="flex items-center mt-2 text-sm text-gray-500">
-                        <i class="fas fa-bed mr-1"></i>
-                        <span>3 beds</span>
-                        <span class="mx-2">•</span>
-                        <i class="fas fa-bath mr-1"></i>
-                        <span>2 baths</span>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-base font-semibold text-gray-900">$185</span>
-                        <span class="text-sm text-gray-500"> / night</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Property Card 7 -->
-            <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div class="relative h-52">
-                    <img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Cottage" class="h-full w-full object-cover">
-                    <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between">
-                        <h3 class="text-lg font-semibold text-gray-900">Cozy Cottage</h3>
-                        <div class="flex items-center">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="text-sm font-medium">4.8</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-1">Portland, Oregon</p>
-                    <div class="flex items-center mt-2 text-sm text-gray-500">
-                        <i class="fas fa-bed mr-1"></i>
-                        <span>2 beds</span>
-                        <span class="mx-2">•</span>
-                        <i class="fas fa-bath mr-1"></i>
-                        <span>1 bath</span>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-base font-semibold text-gray-900">$165</span>
-                        <span class="text-sm text-gray-500"> / night</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Property Card 8 -->
-            <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div class="relative h-52">
-                    <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Historic apartment" class="h-full w-full object-cover">
-                    <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between">
-                        <h3 class="text-lg font-semibold text-gray-900">Historic Apartment</h3>
-                        <div class="flex items-center">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="text-sm font-medium">4.6</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-1">Boston, Massachusetts</p>
-                    <div class="flex items-center mt-2 text-sm text-gray-500">
-                        <i class="fas fa-bed mr-1"></i>
-                        <span>2 beds</span>
-                        <span class="mx-2">•</span>
-                        <i class="fas fa-bath mr-1"></i>
-                        <span>1 bath</span>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-base font-semibold text-gray-900">$190</span>
-                        <span class="text-sm text-gray-500"> / night</span>
-                    </div>
-                </div>
+@foreach ($annonces as $annonce)
+    <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div class="relative h-52">
+            @if($annonce->image)
+                <img src="{{ asset('storage/' . $annonce->image) }}" alt="{{ $annonce->title }}" class="h-full w-full object-cover">
+            @else
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property image" class="h-full w-full object-cover">
+            @endif
+            <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
+                <i class="fas fa-heart"></i>
+            </button>
+            <div class="absolute top-3 left-3">
+                <span class="px-2 py-1 rounded-md bg-gray-900 bg-opacity-70 text-white text-xs font-medium uppercase">
+                    {{ ucfirst($annonce->type) }}
+                </span>
             </div>
         </div>
+        <div class="p-4">
+            <div class="flex justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">{{ Str::limit($annonce->title, 35) }}</h3>
+                <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400 mr-1"></i>
+                    <span class="text-sm font-medium">4.9</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center mt-1 text-sm text-gray-500">
+                <i class="fas fa-map-marker-alt text-red-500 mr-1"></i>
+                <span>{{ Str::limit($annonce->location, 40) }}</span>
+            </div>
+            
+            <p class="text-sm text-gray-500 mt-2 line-clamp-2">{{ $annonce->image }}</p>
+            
+            <div class="flex items-center mt-3 text-sm text-gray-500">
+                <i class="fas fa-bed mr-1"></i>
+                <span>{{ $annonce->rooms }} {{ Str::plural('room', $annonce->rooms) }}</span>
+                <span class="mx-2">•</span>
+                <i class="fas fa-bath mr-1"></i>
+                <span>{{ $annonce->bathrooms }} {{ Str::plural('bathroom', $annonce->bathrooms) }}</span>
+            </div>
+            
+            @if($annonce->available_from && $annonce->available_to)
+                <div class="mt-2 text-xs text-gray-500">
+                    <i class="far fa-calendar-alt mr-1"></i>
+                    <span>Available: {{ \Carbon\Carbon::parse($annonce->available_from)->format('M d') }} - {{ \Carbon\Carbon::parse($annonce->available_to)->format('M d, Y') }}</span>
+                </div>
+            @endif
+            
+            <div class="mt-4 flex justify-between items-center">
+                <div>
+                    <span class="text-base font-semibold text-gray-900">${{ number_format($annonce->price, 2) }}</span>
+                    <span class="text-sm text-gray-500"> / night</span>
+                </div>
+                {{-- <a href="{{ route('annonces.show', $annonce->id) }}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    View details
+                </a> --}}
+            </div>
+        </div>
+    </div>
+@endforeach
+
+
+   
+        </div>
+
+        <div class="mt-12 ">
+            {{ $annonces->links() }}
+        </div>
+
+
 
         <!-- Pagination -->
-        <div class="mt-12 flex justify-center">
+        {{-- <div class="mt-12 flex justify-center">
             <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
                 <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                     <span class="sr-only">Previous</span>
@@ -444,7 +277,7 @@
                     <i class="fas fa-chevron-right"></i>
                 </a>
             </nav>
-        </div>
+        </div> --}}
     </div>
 
     <!-- Footer -->

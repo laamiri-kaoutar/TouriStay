@@ -65,6 +65,67 @@
 
         <!-- Favorites List -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+@foreach ($user->favorite->annonces as $annonce)
+    <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div class="relative h-52">
+            @if($annonce->image)
+                <img src="{{ asset('storage/' . $annonce->image) }}" alt="{{ $annonce->title }}" class="h-full w-full object-cover">
+            @else
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property image" class="h-full w-full object-cover">
+            @endif
+            <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
+                <i class="fas fa-heart"></i>
+            </button>
+            <div class="absolute top-3 left-3">
+                <span class="px-2 py-1 rounded-md bg-gray-900 bg-opacity-70 text-white text-xs font-medium uppercase">
+                    {{ ucfirst($annonce->type) }}
+                </span>
+            </div>
+        </div>
+        <div class="p-4">
+            <div class="flex justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">{{ Str::limit($annonce->title, 35) }}</h3>
+                <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400 mr-1"></i>
+                    <span class="text-sm font-medium">4.9</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center mt-1 text-sm text-gray-500">
+                <i class="fas fa-map-marker-alt text-red-500 mr-1"></i>
+                <span>{{ Str::limit($annonce->location, 40) }}</span>
+            </div>
+            
+            <p class="text-sm text-gray-500 mt-2 line-clamp-2">{{ $annonce->image }}</p>
+            
+            <div class="flex items-center mt-3 text-sm text-gray-500">
+                <i class="fas fa-bed mr-1"></i>
+                <span>{{ $annonce->rooms }} {{ Str::plural('room', $annonce->rooms) }}</span>
+                <span class="mx-2">•</span>
+                <i class="fas fa-bath mr-1"></i>
+                <span>{{ $annonce->bathrooms }} {{ Str::plural('bathroom', $annonce->bathrooms) }}</span>
+            </div>
+            
+            @if($annonce->available_from && $annonce->available_to)
+                <div class="mt-2 text-xs text-gray-500">
+                    <i class="far fa-calendar-alt mr-1"></i>
+                    <span>Available: {{ \Carbon\Carbon::parse($annonce->available_from)->format('M d') }} - {{ \Carbon\Carbon::parse($annonce->available_to)->format('M d, Y') }}</span>
+                </div>
+            @endif
+            
+            <div class="mt-4 flex justify-between items-center">
+                <div>
+                    <span class="text-base font-semibold text-gray-900">${{ number_format($annonce->price, 2) }}</span>
+                    <span class="text-sm text-gray-500"> / night</span>
+                </div>
+                {{-- <a href="{{ route('annonces.show', $annonce->id) }}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    View details
+                </a> --}}
+            </div>
+        </div>
+    </div>
+@endforeach
             <!-- Favorite Item 1 -->
             <div class="bg-white rounded-lg shadow overflow-hidden">
                 <div class="relative h-48">

@@ -16,8 +16,9 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        // dd($request);
-        return view('profile.edit', [
+        // dd($request->user()->password);
+
+        return view('profile', [
             'user' => $request->user(),
         ]);
     }
@@ -27,7 +28,21 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $data=$request->validated();
+      
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('images', 'public');
+
+        } else {
+            $data['image'] = $request->old_image;
+        }
+
+        // dd($data['image']);
+    
+
+
+        $request->user()->fill($data);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;

@@ -63,6 +63,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/annonce/{id}/edit', [AnnonceController::class, 'show'])->middleware([IsOwner::class])->name("annonce.show");
     Route::delete('/annonce/{id}', [AnnonceController::class, 'destroy'])->middleware([IsOwner::class])->name("annonce.delete");
 
+    Route::get('/favorites', [FavoriteController::class, 'index'])->middleware([IsTouriste::class])->name('favorites');
+
+
 
 
 

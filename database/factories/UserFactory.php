@@ -43,6 +43,13 @@ class UserFactory extends Factory
         ]);
     }
 
+    public function touriste()
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_id' => 1, // Set role_id to 2 for owner
+        ]);
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */

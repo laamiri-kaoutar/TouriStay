@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
 
-class Annonce extends Model
+class Favorite extends Model
 {
-    /** @use HasFactory<\Database\Factories\AnnoncesFactory> */
+    /** @use HasFactory<\Database\Factories\FavoriteFactory> */
     use HasFactory;
-    protected $guarded= [];
-    
-    public function owner(){
+
+
+    public function touriste(){
         return $this->belongsTo(User::class, 'user_id'); 
     }
 }

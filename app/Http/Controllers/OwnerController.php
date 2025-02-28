@@ -16,7 +16,7 @@ class OwnerController extends Controller
         
       }
 
-      // dd($count);
+      // dd($user->annonces);
       
 
 

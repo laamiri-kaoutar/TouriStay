@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Favorite;
+
 
 class Touriste extends User
 {
@@ -16,4 +18,8 @@ class Touriste extends User
     //         $builder->where('role', 'touriste');
     //     });
     // }
+
+    public function touriste(){
+        return $this->hasMany(Favorite::class, 'user_id'); 
+    }
 }
