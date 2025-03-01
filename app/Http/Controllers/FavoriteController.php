@@ -14,20 +14,39 @@ class FavoriteController extends Controller
      */
     public function index()
     {
-        $user = Touriste::with('favorites')->find(auth()->id());
-       
-        
-  
-  
-      return view('favorites', [
-        'user' => $user
-      ]);
+        $favorites = Favorite::where('user_id', auth()->id()) 
+        ->with('annonce') 
+        ->simplePaginate(4); 
+    
+        return view('favorites', ['favorites' => $favorites]);
     }
 
+    
+    public function toggle(Request $request)
+    {
+        $favorite = Favorite::where('annonce_id', $request->annonce_id)
+                            ->where('user_id', auth()->id())
+                            ->first();
+        
+        if ($favorite) {
+            $favorite->delete();
+            $message = 'Property removed from favorites';
+        } else {
+            Favorite::create([
+                'annonce_id' => $request->annonce_id,
+                'user_id' => auth()->id(),
+            ]);
+            $message = 'Property added to favorites';
+        }
+    
+        return redirect()->back()->with('success', $message);
+    }
+
+
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created resource in storage.
      */
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'annonce_id' => 'required|exists:annonces,id',
@@ -42,15 +61,6 @@ class FavoriteController extends Controller
 
         return redirect()->back()->with('success', 'recette Updated successfully!');
 
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -82,6 +92,7 @@ class FavoriteController extends Controller
      */
     public function destroy(Favorite $favorite)
     {
-        //
+        $favorite->delete();
+
     }
 }

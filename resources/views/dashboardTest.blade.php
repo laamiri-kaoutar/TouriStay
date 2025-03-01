@@ -23,11 +23,20 @@
                             <i class="fas fa-bell text-lg"></i>
                         </button>
                         <div class="ml-4 relative flex items-center">
-                            <div class="h-8 w-8 rounded-full bg-indigo-700 flex items-center justify-center">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <span class="ml-2">Admin User</span>
+                            <img class="h-8 w-8 rounded-full" src="{{ auth()->user()->image ? asset('storage/' . auth()->user()->image)  : 'https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg'}}" alt="">
+                            <span class="ml-2 text-sm font-medium text-gray-700">{{ auth()->user()->name}}</span>
                         </div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-dropdown-link 
+                                    class="ml-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                   :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -52,7 +61,7 @@
                         <i class="fas fa-building mr-3"></i>
                         <span>Properties</span>
                     </a>
-                    <a href="Announcements" class="flex items-center py-3 px-6 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <a href="{{'annonces'}}" class="flex items-center py-3 px-6 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
                         <i class="fas fa-bullhorn mr-3"></i>
                         <span>Announcements</span>
                     </a>
@@ -82,8 +91,8 @@
                                 <i class="fas fa-users text-indigo-600 text-xl"></i>
                             </div>
                             <div class="ml-4">
-                                <h2 class="text-sm font-medium text-gray-500">Total Users</h2>
-                                <p class="text-2xl font-semibold text-gray-900">2,563</p>
+                                <h2 class="text-sm font-medium text-gray-500">Total touristes</h2>
+                                <p class="text-2xl font-semibold text-gray-900">{{$totalTouristes}}</p>
                             </div>
                         </div>
                         <div class="mt-3 text-green-500 text-sm font-medium flex items-center">
@@ -99,7 +108,7 @@
                             </div>
                             <div class="ml-4">
                                 <h2 class="text-sm font-medium text-gray-500">Properties</h2>
-                                <p class="text-2xl font-semibold text-gray-900">849</p>
+                                <p class="text-2xl font-semibold text-gray-900">{{$totalOwners}}</p>
                             </div>
                         </div>
                         <div class="mt-3 text-green-500 text-sm font-medium flex items-center">
@@ -115,7 +124,7 @@
                             </div>
                             <div class="ml-4">
                                 <h2 class="text-sm font-medium text-gray-500">Announcements</h2>
-                                <p class="text-2xl font-semibold text-gray-900">426</p>
+                                <p class="text-2xl font-semibold text-gray-900">{{$totalAnnonces}}</p>
                             </div>
                         </div>
                         <div class="mt-3 text-green-500 text-sm font-medium flex items-center">

@@ -24,7 +24,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+
+
+        return view('auth.register', [ 'roles' => Role::all()]);
     }
 
     /**
@@ -34,15 +36,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        var_dump(Role::find($request->role_id)->name);
-        // var_dump(Role::find((int) $request->role_id));
-        // var_dump($request->role_id);
-        // dd($request->role_id, gettype($request->role_id));
-
-        // var_dump($request->password);
-        // var_dump($request->password_confirmation);
-
-        // dd($request->password);
+        // dd($request);
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],

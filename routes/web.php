@@ -5,6 +5,8 @@ use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\TouristeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnonceController;
+use App\Http\Controllers\FavoriteController;
+
 
 
 
@@ -12,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsTouriste;
 use App\Http\Middleware\IsOwner;
+use App\Http\Middleware\IsAdminOrOwner;
+
 use App\Models\Owner;
 use App\Models\Role;
 
@@ -26,12 +30,9 @@ Route::get('/', function () {
     // dd(Owner::all());
     // auth()->user()->role->name
     // dd(auth()->user()->role->name);
-    // return view('welcome');
-    // return view('editAnnonce');
-
-    return view('auth/register' , [ 'roles' => Role::all()]);
-
-
+    
+    redirect("register");
+    
 })->name('home');
 
 // Route::middleware(['auth', 'verified'])->group(function () {
@@ -61,11 +62,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/annonce/store', [AnnonceController::class, 'store'])->middleware([IsOwner::class])->name("annonce.store");
     Route::put('/annonce/{id}', [AnnonceController::class, 'update'])->middleware([IsOwner::class])->name("annonce.update");
     Route::get('/annonce/{id}/edit', [AnnonceController::class, 'show'])->middleware([IsOwner::class])->name("annonce.show");
-    Route::delete('/annonce/{id}', [AnnonceController::class, 'destroy'])->middleware([IsOwner::class])->name("annonce.delete");
+    Route::delete('/annonce/{id}', [AnnonceController::class, 'destroy'])->middleware([IsAdminOrOwner::class])->name("annonce.delete");
+
+    Route::get('/annonces', [AnnonceController::class, 'index'])->middleware([IsAdmin::class])->name("annonces");
+
 
     Route::get('/favorites', [FavoriteController::class, 'index'])->middleware([IsTouriste::class])->name('favorites');
-
-
+    Route::post('/favorite/toggle', [FavoriteController::class, 'toggle'])->middleware([IsTouriste::class])->name('favorite.toggle');
 
 
 

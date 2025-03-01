@@ -16,6 +16,7 @@
                 </h2>
                 <p class="mt-2 text-center text-sm text-gray-600">
                     Join our platform and explore amazing experiences
+                    {{ $errors->first() }}
                 </p>
             </div>
             <div class="mt-4 bg-white py-4 px-4 shadow sm:rounded-lg sm:px-10">

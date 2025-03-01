@@ -19,7 +19,7 @@ class Touriste extends User
     //     });
     // }
 
-    public function touriste(){
+    public function favorites(){
         return $this->hasMany(Favorite::class, 'user_id'); 
     }
 }

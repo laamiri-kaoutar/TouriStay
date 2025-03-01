@@ -8,6 +8,16 @@ use App\Models\Annonce;
 
 class AnnonceController extends Controller
 {
+
+    public function index(){
+
+        $annonces = Annonce::with('owner')->get();
+
+        return view('Announcements' ,['annonces'=> $annonces]);
+
+    }
+
+
     public function store(Request  $request)
     {      
        $data= $request->validate([
@@ -78,6 +88,7 @@ class AnnonceController extends Controller
     
     public function destroy($id)
     {
+        // dd('gg');
         $annonce = Annonce::findOrFail($id);
         $annonce->delete();
         return redirect()->back()->with('success', 'Temoignage deleted successfully!');

@@ -23,7 +23,7 @@
                         <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Explore
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                        <a  href="{{ route('favorites') }}"  class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Favorites
                         </a>
                         <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
@@ -129,9 +129,8 @@
 
   <!-- Search and Filters -->
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <form action="{{ route('touriste.dashboard') }}" method="Post" class="bg-white rounded-lg shadow-sm p-4">
-        @csrf
-        @method('GET')
+    <form action="{{ route('touriste.dashboard') }}" method="GET" class="bg-white rounded-lg shadow-sm p-4">
+       
         <div class="flex flex-wrap md:flex-nowrap items-center gap-4">
             <!-- Search Bar -->
             <div class="w-full relative">
@@ -152,9 +151,9 @@
                 <select 
                     name="per_page"
                     class="pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="6" {{ request('per_page') == 6 || !request('per_page') ? 'selected' : '' }}>6 per page</option>
-                    <option value="8" {{ request('per_page') == 8 ? 'selected' : '' }}>8 per page</option>
-                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10 per page</option>
+                    <option value="3" {{ request('per_page') == 3 || !request('per_page') ? 'selected' : '' }}>3 per page</option>
+                    <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5 per page</option>
+                    <option value="7" {{ request('per_page') == 7 ? 'selected' : '' }}>7 per page</option>
                 </select>
                 
                 <!-- Search Button -->
@@ -187,9 +186,23 @@
             @else
                 <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property image" class="h-full w-full object-cover">
             @endif
-            <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
+            <form method="POST" action="{{ route('favorite.toggle') }}" class="absolute top-3 right-3">
+                @csrf
+                <input type="hidden" name="annonce_id" id="annonce_id" value ="{{$annonce->id}}">
+                
+                <button type="submit" class="p-1.5 rounded-full bg-white
+                @if( $favoriteAnnonces->contains('annonce_id', $annonce->id))
+                     text-red-600 hover:text-red-400 
+                @else
+                    text-red-400 hover:text-red-600 
+                @endif
+                 focus:outline-none">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </form>
+            {{-- <button class="absolute top-3 right-3 p-1.5 rounded-full bg-white text-red-400 hover:text-red-600 focus:outline-none">
                 <i class="fas fa-heart"></i>
-            </button>
+            </button> --}}
             <div class="absolute top-3 left-3">
                 <span class="px-2 py-1 rounded-md bg-gray-900 bg-opacity-70 text-white text-xs font-medium uppercase">
                     {{ ucfirst($annonce->type) }}
@@ -198,11 +211,16 @@
         </div>
         <div class="p-4">
             <div class="flex justify-between">
-                <h3 class="text-lg font-semibold text-gray-900">{{ Str::limit($annonce->title, 35) }}</h3>
-                <div class="flex items-center">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    {{ Str::limit($annonce->title, 35) }}</h3>
+                {{-- <div class="flex items-center">
                     <i class="fas fa-star text-yellow-400 mr-1"></i>
-                    <span class="text-sm font-medium">4.9</span>
-                </div>
+                    <span class="text-sm font-medium">    @if( $favoriteAnnonces->contains('annonce_id', $annonce->id))
+                        yyyesss 
+                   @else
+                      noooo
+                   @endif</span>
+                </div> --}}
             </div>
             
             <div class="flex items-center mt-1 text-sm text-gray-500">

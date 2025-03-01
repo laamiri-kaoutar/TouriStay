@@ -40,7 +40,7 @@
                     <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
                 </div>
                 <nav class="mt-5">
-                    <a href="#" class="flex items-center py-3 px-6 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <a href="/admin" class="flex items-center py-3 px-6 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
                         <i class="fas fa-home mr-3"></i>
                         <span>Overview</span>
                     </a>
@@ -112,15 +112,17 @@
                 <!-- Announcements List -->
                 <div class="bg-white shadow overflow-hidden sm:rounded-md">
                     <ul class="divide-y divide-gray-200">
-                        <!-- Announcement Item 1 -->
+
+                        @foreach ($annonces as $annonce)
+
                         <li>
                             <div class="px-4 py-4 sm:px-6">
                                 <div class="flex items-center justify-between">
                                     <div class="flex flex-col sm:flex-row sm:items-center">
-                                        <p class="text-sm font-medium text-indigo-600 truncate">Beach Villa in Bali</p>
+                                        <p class="text-sm font-medium text-indigo-600 truncate">{{ Str::limit($annonce->title, 35) }}</p>
                                         <div class="mt-2 sm:mt-0 sm:ml-2 flex-shrink-0 flex">
                                             <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Active
+                                                {{ ucfirst($annonce->type) }}
                                             </p>
                                         </div>
                                     </div>
@@ -131,7 +133,20 @@
                                         <button class="p-1 rounded-full text-gray-400 hover:text-yellow-600 mr-2" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button onclick="toggleModal()" class="p-1 rounded-full text-gray-400 hover:text-red-600" title="Delete" onclick="document.getElementById('deleteModal').classList.remove('hidden')">
+
+                                        {{-- <form action="{{ route('annonce.delete', $annonce->id) }}" method="post">
+                                            @csrf 
+                                            @method('Delete')
+                                            <button type="submit" class="p-1 rounded-full text-gray-400 hover:text-red-600" title="Delete" role="menuitem">
+                                                <i class="fas fa-trash"> </i> 
+                                                
+                                            </button>
+
+                                        </form> --}}
+
+
+
+                                        <button onclick="toggleModal({{ $annonce->id }})" class="p-1 rounded-full text-gray-400 hover:text-red-600" title="Delete" onclick="document.getElementById('deleteModal').classList.remove('hidden')">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -140,21 +155,26 @@
                                     <div class="sm:flex">
                                         <p class="flex items-center text-sm text-gray-500">
                                             <i class="fas fa-map-marker-alt flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            Bali, Indonesia
+                                            {{ Str::limit($annonce->location, 40) }}
                                         </p>
                                         <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
                                             <i class="fas fa-dollar-sign flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            $250 / night
+                                            ${{ number_format($annonce->price, 2) }} / night
                                         </p>
                                         <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
                                             <i class="fas fa-bed flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            3 bedrooms
+                                            <span>{{ $annonce->bathrooms }} {{ Str::plural('bathroom', $annonce->bathrooms) }}</span>
+                                            
+                                        </p>
+                                        <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+                                            <i class="fas fa-door-open flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                            <span>{{ $annonce->rooms }} {{ Str::plural('room', $annonce->rooms) }}</span>                           
                                         </p>
                                     </div>
                                     <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                                         <i class="fas fa-calendar flex-shrink-0 mr-1.5 text-gray-400"></i>
                                         <p>
-                                            Posted on <time datetime="2024-01-15">Jan 15, 2024</time>
+                                            Posted on <time datetime="2024-01-15">{{ \Carbon\Carbon::parse($annonce->created_at)->format('M d, Y') }}</time>
                                         </p>
                                     </div>
                                 </div>
@@ -162,7 +182,7 @@
                                     <div class="sm:flex">
                                         <p class="flex items-center text-sm text-gray-500">
                                             <i class="fas fa-user flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            John Doe (Property Owner)
+                                            {{ $annonce->owner->name }} (Property Owner)
                                         </p>
                                     </div>
                                     <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
@@ -175,194 +195,10 @@
                             </div>
                         </li>
 
-                        <!-- Announcement Item 2 -->
-                        <li>
-                            <div class="px-4 py-4 sm:px-6">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex flex-col sm:flex-row sm:items-center">
-                                        <p class="text-sm font-medium text-indigo-600 truncate">Mountain Cabin with Hot Tub</p>
-                                        <div class="mt-2 sm:mt-0 sm:ml-2 flex-shrink-0 flex">
-                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Active
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-shrink-0 ml-2">
-                                        <button class="p-1 rounded-full text-gray-400 hover:text-indigo-600 mr-2" title="View">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="p-1 rounded-full text-gray-400 hover:text-yellow-600 mr-2" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="p-1 rounded-full text-gray-400 hover:text-red-600" title="Delete" onclick="document.getElementById('deleteModal').classList.remove('hidden')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="mt-2 sm:flex sm:justify-between">
-                                    <div class="sm:flex">
-                                        <p class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-map-marker-alt flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            Aspen, Colorado
-                                        </p>
-                                        <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                                            <i class="fas fa-dollar-sign flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            $195 / night
-                                        </p>
-                                        <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                                            <i class="fas fa-bed flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            2 bedrooms
-                                        </p>
-                                    </div>
-                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                        <i class="fas fa-calendar flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                        <p>
-                                            Posted on <time datetime="2024-01-28">Jan 28, 2024</time>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="mt-2 sm:flex sm:justify-between">
-                                    <div class="sm:flex">
-                                        <p class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-user flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            Sarah Johnson (Property Owner)
-                                        </p>
-                                    </div>
-                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                        <i class="fas fa-star flex-shrink-0 mr-1.5 text-yellow-400"></i>
-                                        <p>
-                                            4.8 (86 reviews)
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
 
-                        <!-- Announcement Item 3 -->
-                        <li>
-                            <div class="px-4 py-4 sm:px-6">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex flex-col sm:flex-row sm:items-center">
-                                        <p class="text-sm font-medium text-indigo-600 truncate">Modern Loft in Downtown</p>
-                                        <div class="mt-2 sm:mt-0 sm:ml-2 flex-shrink-0 flex">
-                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                Pending Review
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-shrink-0 ml-2">
-                                        <button class="p-1 rounded-full text-gray-400 hover:text-indigo-600 mr-2" title="View">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="p-1 rounded-full text-gray-400 hover:text-yellow-600 mr-2" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="p-1 rounded-full text-gray-400 hover:text-red-600" title="Delete" onclick="document.getElementById('deleteModal').classList.remove('hidden')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="mt-2 sm:flex sm:justify-between">
-                                    <div class="sm:flex">
-                                        <p class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-map-marker-alt flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            New York, NY
-                                        </p>
-                                        <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                                            <i class="fas fa-dollar-sign flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            $175 / night
-                                        </p>
-                                        <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                                            <i class="fas fa-bed flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            1 bedroom
-                                        </p>
-                                    </div>
-                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                        <i class="fas fa-calendar flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                        <p>
-                                            Posted on <time datetime="2024-02-05">Feb 5, 2024</time>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="mt-2 sm:flex sm:justify-between">
-                                    <div class="sm:flex">
-                                        <p class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-user flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            Michael Brown (Property Owner)
-                                        </p>
-                                    </div>
-                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                        <i class="fas fa-user-check flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                        <p>
-                                            New listing (no reviews)
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+                        @endforeach
+                        <!-- Announcement Item 1 -->
 
-                        <!-- Announcement Item 4 -->
-                        <li>
-                            <div class="px-4 py-4 sm:px-6">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex flex-col sm:flex-row sm:items-center">
-                                        <p class="text-sm font-medium text-indigo-600 truncate">Lakeside Cottage with Dock</p>
-                                        <div class="mt-2 sm:mt-0 sm:ml-2 flex-shrink-0 flex">
-                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                Inactive
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-shrink-0 ml-2">
-                                        <button class="p-1 rounded-full text-gray-400 hover:text-indigo-600 mr-2" title="View">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="p-1 rounded-full text-gray-400 hover:text-yellow-600 mr-2" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="p-1 rounded-full text-gray-400 hover:text-red-600" title="Delete" onclick="document.getElementById('deleteModal').classList.remove('hidden')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="mt-2 sm:flex sm:justify-between">
-                                    <div class="sm:flex">
-                                        <p class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-map-marker-alt flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            Lake Tahoe, Nevada
-                                        </p>
-                                        <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                                            <i class="fas fa-dollar-sign flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            $220 / night
-                                        </p>
-                                        <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                                            <i class="fas fa-bed flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            4 bedrooms
-                                        </p>
-                                    </div>
-                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                        <i class="fas fa-calendar flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                        <p>
-                                            Posted on <time datetime="2023-11-20">Nov 20, 2023</time>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="mt-2 sm:flex sm:justify-between">
-                                    <div class="sm:flex">
-                                        <p class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-user flex-shrink-0 mr-1.5 text-gray-400"></i>
-                                            Emma Wilson (Property Owner)
-                                        </p>
-                                    </div>
-                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                        <i class="fas fa-star flex-shrink-0 mr-1.5 text-yellow-400"></i>
-                                        <p>
-                                            4.7 (42 reviews)
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
                         
                     </ul>
                 </div>
@@ -444,9 +280,17 @@
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    {{-- <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
                         Delete
-                    </button>
+                    </button> --}}
+                    <form id="deleteForm" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <input type="hidden" id="annonce_id" name="annonce_id">
+                        <button type="submit" class="bg-red-500 mx-3 text-white px-4 py-2 rounded">Confirmer</button>
+                    </form>
+            
+
                     <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onclick="document.getElementById('deleteModal').classList.add('hidden')">
                         Cancel
                     </button>
@@ -457,9 +301,16 @@
 
     <script>
         // Simple JavaScript to handle the modal toggle
-        function toggleModal() {
+        const inputId = document.getElementById('annonce_id');
+        const form = document.getElementById('deleteForm'); // Récupère le formulaire
+
+
+        function toggleModal(id='') {
             const modal = document.getElementById('deleteModal');
             if (modal.classList.contains('hidden')) {
+                inputId.value = id || '';
+                form.action = `/annonce/${id}`;
+
                 modal.classList.remove('hidden');
             } else {
                 modal.classList.add('hidden');
