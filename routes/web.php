@@ -6,6 +6,10 @@ use App\Http\Controllers\TouristeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnonceController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\PaymentController;
+
+
 
 
 
@@ -20,18 +24,22 @@ use App\Models\Owner;
 use App\Models\Role;
 
 
+use App\Mail\PaymentConfirmation;
+use Illuminate\Support\Facades\Mail;
+
 
 // use App\Http\Middleware\Is  Admin;
 
 
 
 Route::get('/', function () {
-    // auth()->logout(); 
+    auth()->logout();   
     // dd(Owner::all());
     // auth()->user()->role->name
     // dd(auth()->user()->role->name);
+    // Mail::to('kaoutarlaamiri355@gmail.com')->send(new PaymentConfirmation(5000, 3, '2025-03-01', '2025-03-04'));
     
-    redirect("register");
+    // redirect()->route("register");
     
 })->name('home');
 
@@ -57,6 +65,7 @@ Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/admin', [AdminController::class, 'index'])->middleware([IsAdmin::class])->name('admin.dashboard');
+    Route::get('/dashboard/reservations', [ReservationController::class, 'dashboard'])->middleware([IsAdmin::class])->name('dashboard.reservation');
     Route::get('/owner', [OwnerController::class, 'index'])->middleware([IsOwner::class])->name('owner.dashboard');
     Route::get('/touriste', [TouristeController::class, 'index'])->middleware([IsTouriste::class])->name('touriste.dashboard');
     Route::post('/annonce/store', [AnnonceController::class, 'store'])->middleware([IsOwner::class])->name("annonce.store");
@@ -69,6 +78,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/favorites', [FavoriteController::class, 'index'])->middleware([IsTouriste::class])->name('favorites');
     Route::post('/favorite/toggle', [FavoriteController::class, 'toggle'])->middleware([IsTouriste::class])->name('favorite.toggle');
+    Route::post('/reservation/complete', [ReservationController::class, 'completeReservation'])->middleware([IsTouriste::class])->name("reservation.complete");
+
+    Route::get('/annonce/{id}/available-dates', [ReservationController::class, 'getAvailableDates']);
+
+    Route::post('/pay' ,[PaymentController::class , 'store'])->middleware([IsTouriste::class])->name("reservation.payement");
+
+
 
 
 

@@ -65,9 +65,9 @@
                         <i class="fas fa-bullhorn mr-3"></i>
                         <span>Announcements</span>
                     </a>
-                    <a href="#" class="flex items-center py-3 px-6 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <a href="{{route('dashboard.reservation')}}" class="flex items-center py-3 px-6 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
                         <i class="fas fa-chart-bar mr-3"></i>
-                        <span>Reports</span>
+                        <span>Reservations</span>
                     </a>
                     <a href="#" class="flex items-center py-3 px-6 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
                         <i class="fas fa-cog mr-3"></i>

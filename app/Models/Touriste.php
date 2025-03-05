@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Favorite;
+use App\Models\Reservation;
+
 
 
 class Touriste extends User
@@ -22,4 +24,10 @@ class Touriste extends User
     public function favorites(){
         return $this->hasMany(Favorite::class, 'user_id'); 
     }
+
+    public function reservations(){
+        return $this->hasMany(Reservation::class, 'reservation_id'); 
+    }
+
+
 }

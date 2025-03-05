@@ -29,7 +29,7 @@ class TouristeController extends Controller
             $query->where('type' , $request->filter);
         }
 
-        $perPage= $request->filled('per_page') ? $request->per_page : 6;
+        $perPage= $request->filled('per_page') ? $request->per_page : 4;
 
         $annonces= $query->paginate($perPage)->withQueryString();
 
