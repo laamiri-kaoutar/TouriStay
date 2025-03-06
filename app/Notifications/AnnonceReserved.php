@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Str;
 
 use Illuminate\Notifications\Messages\DatabaseMessage;
 
@@ -54,7 +55,8 @@ class AnnonceReserved extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'Your annonce "' . $this->reservation->annonce->title . '" has been reserved and paid!',
+            'message_owner' => 'Your annonce "' . Str::limit($this->reservation->annonce->title , 22) . '" has been reserved and paid!',
+            'message_tourist' => 'You have reserved and paid the annonce "' . Str::limit($this->reservation->annonce->title , 22) . '"',
             'reservation_id' => $this->reservation->id,
             'annonce_id' => $this->reservation->annonce_id,
         ];

@@ -43,7 +43,6 @@ class ReservationController extends Controller
 
             );
 
-            dd($period);
     
             foreach ($period as $date) {
                 $reservedDates[] = $date->format('Y-m-d');
@@ -76,7 +75,9 @@ class ReservationController extends Controller
 
         $amount = $days*$annonce->price;
         // dd($amount,"$");
-        $stripe_key = env('STRIPE_KEY');
+        $stripe_key = "pk_test_51QygIvHXDjlnm4V7I5GjcjzfDZidwPTzIxN1kVxhUnORwzsvCGmq5uHYWSEceCgL7wGUlNp4Y7K2euhKt8ymE4qJ00W1sgvz8u";
+        // $stripe_key = config('services.stripe.key');
+        // dd($stripe_key);
 
         return view('stripe', compact('days', 'start', 'end' ,'annonce' , 'amount' , 'stripe_key'));
 

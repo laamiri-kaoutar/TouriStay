@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Owner;
+use App\Models\Reservation;
+
 
 
 class OwnerController extends Controller
@@ -24,5 +26,14 @@ class OwnerController extends Controller
       'user' => $user
     ]);
 
+   }
+
+   public function reservations()
+   {
+       $reservations = Reservation::whereHas('annonce', function ( $query) {
+         $query->where('user_id', auth()->id());
+     })->paginate(4);
+
+       return view('ownerReservations', compact('reservations'));
    }
 }

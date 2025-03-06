@@ -17,13 +17,13 @@
                         <span class="text-indigo-600 text-lg font-bold">TourismApp</span>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="#" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                        <a href="{{route('owner.dashboard')}}"  class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Dashboard
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                        {{-- <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             My Properties
-                        </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                        </a> --}}
+                        <a href="{{route('owner.reservations')}}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Reservations
                         </a>
                         <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
@@ -31,34 +31,65 @@
                         </a>
                     </div>
                 </div>
-                <div class="hidden sm:ml-6 sm:flex sm:items-center">
-                    <button class="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none">
-                        <i class="fas fa-bell"></i>
-                    </button>
-                    <div class="ml-3 relative">
-                        <a href="{{ route('profile.edit') }}" class="block hover:opacity-80 transition-opacity">
-                            <div class="flex items-center">
-                                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                                <span class="ml-2 text-sm font-medium text-gray-700">John Smith</span>
-                            </div>
-                        </a>
+                            <!-- HTML for the header component -->
+<div class="hidden sm:ml-6 sm:flex sm:items-center">
+    <!-- Notification Bell with Dropdown -->
+    <div class="relative mr-4">
+        <button id="notificationBell" class="relative p-1 rounded-full hover:bg-gray-100 focus:outline-none">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 11-4 0v-.659A6.002 6.002 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0a3 3 0 01-6 0">
+                </path>
+            </svg>
+            
+            <!-- Show count if there are unread notifications -->
+            @if(auth()->user()->unreadNotifications->count() > 0)
+                <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                    {{ auth()->user()->unreadNotifications->count() }}
+                </span>
+            @endif
+        </button>
+        
+        <div id="notificationList" class="hidden bg-white p-2 shadow-lg absolute right-0 mt-2 w-64 border rounded-md z-10">
+            <h3 class="text-sm font-semibold mb-2 px-2">Notifications</h3>
+            
+            @if(auth()->user()->unreadNotifications->count() > 0)
+                @foreach(auth()->user()->unreadNotifications as $notification)
+                    <div class="p-2 border-b text-sm text-gray-700 hover:bg-gray-50">
+                        {{ $notification->data['message_owner'] }}
                     </div>
-                    <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                @endforeach
+                
+                <a href="{{route('notifications.read')}}" class="block text-blue-500 text-sm mt-2 px-2 hover:underline">Mark all as read</a>
+            @else
+                <div class="p-2 text-sm text-gray-500">No new notifications</div>
+            @endif
+        </div>
+    </div>
+    
+    <!-- User Profile -->
+ 
 
-                            <x-dropdown-link 
-                                    class="ml-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                   :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                    </form>
-
-                    <!-- <a href="login.html" class="ml-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Log out
-                    </a> -->
-                </div>
+    <div class="ml-3 relative">
+        <a href="{{ route('profile.edit') }}" class="block hover:opacity-80 transition-opacity">
+            <div class="flex items-center">
+                <img class="h-8 w-8 rounded-full object-cover" 
+                     src="{{ auth()->user()->image ? asset('storage/' . auth()->user()->image) : 'https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg'}}" 
+                     alt="Profile picture">
+                <span class="ml-2 text-sm font-medium text-gray-700">{{ auth()->user()->name}}</span>
+            </div>
+        </a>
+    </div>
+    
+    <!-- Logout Button -->
+    <form method="POST" action="{{ route('logout') }}" class="ml-4">
+        @csrf
+        <button type="submit" 
+                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            {{ __('Log Out') }}
+        </button>
+    </form>
+</div>
                 <div class="-mr-2 flex items-center sm:hidden">
                     <!-- Mobile menu button -->
                     <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
@@ -826,6 +857,26 @@
     previewContainer.classList.add('hidden');
     noImageView.classList.remove('hidden');
   }
+
+
+  
+document.addEventListener('DOMContentLoaded', function() {
+    const notificationBell = document.getElementById('notificationBell');
+    const notificationList = document.getElementById('notificationList');
+    
+    // Toggle notification list on bell click
+    notificationBell.addEventListener('click', function(e) {
+        e.stopPropagation();
+        notificationList.classList.toggle('hidden');
+    });
+    
+    // Close notification list when clicking elsewhere
+    document.addEventListener('click', function(e) {
+        if (!notificationBell.contains(e.target) && !notificationList.contains(e.target)) {
+            notificationList.classList.add('hidden');
+        }
+    });
+});
   
     </script>
 </body>

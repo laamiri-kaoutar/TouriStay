@@ -22,7 +22,7 @@ class PaymentController extends Controller
 
         // dd($request->stripeToken);
 
-        $stripe = new \Stripe\StripeClient(env("STRIPE_SECRET"));
+        $stripe = new \Stripe\StripeClient("sk_test_51QygIvHXDjlnm4V75ZzjEhKKVjrCynCvbLT6X7ymRrRfPzOfk0aODhRv9B3g2pGxDsk6pNfiQOm6sosZmXmYtngf00AHD8sb9V");
 
 
          $charge=$stripe->charges->create([

@@ -258,12 +258,19 @@
     <!-- END FOOTER PLACEHOLDER -->
 
     <!-- Stripe JS -->
+    {{-- <script src="https://js.stripe.com/v3/"></script> --}}
+
     <script src="https://js.stripe.com/v3/"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // console.log('{{ $stripe_key }}');
+
             // Create a Stripe client
             const stripe = Stripe('{{ $stripe_key }}');
             const elements = stripe.elements();
+
+            
             
             // Create an instance of the card Element
             const cardElement = elements.create('card', {

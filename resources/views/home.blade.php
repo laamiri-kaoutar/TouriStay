@@ -21,11 +21,11 @@
                         <span class="text-indigo-600 text-lg font-bold">TourismApp</span>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="#" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                        <a href="{{ route('touriste.dashboard') }}" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Home
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Explore
+                        <a href="{{ route('tourist.reservations') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Reservations
                         </a>
                         <a  href="{{ route('favorites') }}"  class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Favorites
@@ -60,11 +60,11 @@
             @if(auth()->user()->unreadNotifications->count() > 0)
                 @foreach(auth()->user()->unreadNotifications as $notification)
                     <div class="p-2 border-b text-sm text-gray-700 hover:bg-gray-50">
-                        {{ $notification->data['message'] }}
+                        {{ $notification->data['message_tourist'] }}
                     </div>
                 @endforeach
                 
-                <a href="#" class="block text-blue-500 text-sm mt-2 px-2 hover:underline">Mark all as read</a>
+                <a href="{{route('notifications.read')}}" class="block text-blue-500 text-sm mt-2 px-2 hover:underline">Mark all as read</a>
             @else
                 <div class="p-2 text-sm text-gray-500">No new notifications</div>
             @endif
@@ -216,7 +216,9 @@
     <div class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
         <div class="relative h-52">
             @if($annonce->image)
-                <img src="{{ asset('storage/' . $annonce->image) }}" alt="{{ $annonce->title }}" class="h-full w-full object-cover">
+            <img src="{{ asset('storage/' . $annonce->image) }}" alt="Property image" class="h-full w-full object-cover">
+
+                {{-- <img src="{{ asset('storage/' . $annonce->image) }}" alt="{{ $annonce->title }}" class="h-full w-full object-cover"> --}}
             @else
                 <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Property image" class="h-full w-full object-cover">
             @endif
@@ -444,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch(`/annonce/${annonceId}/available-dates`)
                 .then(response => response.json())
                 .then(data => {
-                    // console.log("Reserved Dates:", data.reserved_dates);
+                    console.log("Reserved Dates:", data.reserved_dates);
                     
 
                     initFlatpickr(data.available_from, data.available_to, data.reserved_dates);
@@ -468,6 +470,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function initFlatpickr(minDate, maxDate, disabledDates) {
+                    console.log("Reserved Dates:", disabledDates);
+
+
+
         flatpickr(fromDateInput, {
             dateFormat: "Y-m-d",
             minDate: minDate,

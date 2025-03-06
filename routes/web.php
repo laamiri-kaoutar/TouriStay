@@ -39,29 +39,14 @@ Route::get('/', function () {
     // dd(auth()->user()->role->name);
     // Mail::to('kaoutarlaamiri355@gmail.com')->send(new PaymentConfirmation(5000, 3, '2025-03-01', '2025-03-04'));
     
-    // redirect()->route("register");
+    return redirect('/register');
     
 })->name('home');
 
-// Route::middleware(['auth', 'verified'])->group(function () {
-//     Route::get('/admin', function () {
-//         return view('dashboardTest');
-//     })->middleware([IsAdmin::class]);
-
-//     Route::get('/touriste', function () {
-//         return view('home');
-//     })->middleware([IsTouriste::class]);
-
-//        Route::get('/owner', [OwnerController::class, 'index'])->middleware([IsOwner::class])->name('owner.dashboard');
-
-  
-// });
 
 
 
 
-
-Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/admin', [AdminController::class, 'index'])->middleware([IsAdmin::class])->name('admin.dashboard');
@@ -72,6 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/annonce/{id}', [AnnonceController::class, 'update'])->middleware([IsOwner::class])->name("annonce.update");
     Route::get('/annonce/{id}/edit', [AnnonceController::class, 'show'])->middleware([IsOwner::class])->name("annonce.show");
     Route::delete('/annonce/{id}', [AnnonceController::class, 'destroy'])->middleware([IsAdminOrOwner::class])->name("annonce.delete");
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 
     Route::get('/annonces', [AnnonceController::class, 'index'])->middleware([IsAdmin::class])->name("annonces");
 
@@ -80,10 +66,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/favorite/toggle', [FavoriteController::class, 'toggle'])->middleware([IsTouriste::class])->name('favorite.toggle');
     Route::post('/reservation/complete', [ReservationController::class, 'completeReservation'])->middleware([IsTouriste::class])->name("reservation.complete");
 
+    Route::get('/tourist/reservations', [TouristeController::class, 'reservations'])->name('tourist.reservations');
+    Route::get('/owner/reservations' , [OwnerController::class , 'reservations'])->middleware([IsOwner::class])->name('owner.reservations');
+
+
+
     Route::get('/annonce/{id}/available-dates', [ReservationController::class, 'getAvailableDates']);
 
     Route::post('/pay' ,[PaymentController::class , 'store'])->middleware([IsTouriste::class])->name("reservation.payement");
 
+    Route::get('/notifications/markAsRead', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return redirect()->back();
+    })->name('notifications.read');
+    
 
 
 
