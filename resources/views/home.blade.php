@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch(`/annonce/${annonceId}/available-dates`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("Reserved Dates:", data.reserved_dates);
+                    // console.log("Reserved Dates:", data.reserved_dates);
                     
 
                     initFlatpickr(data.available_from, data.available_to, data.reserved_dates);
@@ -470,9 +470,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function initFlatpickr(minDate, maxDate, disabledDates) {
-                    console.log("Reserved Dates:", disabledDates);
-
-
+                    // console.log("Reserved Dates:", disabledDates);
 
         flatpickr(fromDateInput, {
             dateFormat: "Y-m-d",

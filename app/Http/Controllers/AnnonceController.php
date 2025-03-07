@@ -18,29 +18,19 @@ class AnnonceController extends Controller
     }
 
 
-    public function store(Request  $request)
+    public function store(StoreAnnonceRequest  $request)
     {      
-       $data= $request->validate([
-            'title' => 'required|string|max:255',
-            'type' => 'required|string|in:appartement,house,villa,studio',
-            'description' => 'nullable|string|min:10',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'available_from' => 'nullable|date',
-            'available_to' => 'nullable|date|after_or_equal:available_from',
-            'rooms' => 'nullable|integer|min:1|max:5',
-            'price' => 'required|numeric|min:0|max:9999999.99',
-            'bathrooms' => 'nullable|integer|min:1|max:5',
-            'location' => 'required|string|max:255',
-        ]);
-
-        $data['user_id'] = auth()->id(); 
+        $validated = $request->validated();
 
 
-        $data['image'] = $request->file('image')->store('images', 'public');
+        $validated['user_id'] = auth()->id(); 
+
+
+        $validated['image'] = $request->file('image')->store('images', 'public');
         // dd($data);
         // $data['type'] = [$data['type'] ];
 
-        Annonce::create($data);
+        Annonce::create($validated);
         return redirect()->back()->with('success', 'recette Updated successfully!');
 
     } 
@@ -49,21 +39,11 @@ class AnnonceController extends Controller
         return view('editAnnonce' , ['annonce' => Annonce::with('owner')->find($id)]);
     }
 
-    public function update(Request  $request ,$id)
+    public function update(StoreAnnonceRequest  $request ,$id)
     {      
         // dd($id);
-       $data= $request->validate([
-            'title' => 'required|string|max:255',
-            'type' => 'required|string|in:appartement,house,villa,studio',
-            'description' => 'nullable|string|min:10',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'available_from' => 'nullable|date',
-            'available_to' => 'nullable|date|after_or_equal:available_from',
-            'rooms' => 'nullable|integer|min:1|max:5',
-            'price' => 'required|numeric|min:0|max:9999999.99',
-            'bathrooms' => 'nullable|integer|min:1|max:5',
-            'location' => 'required|string|max:255',
-        ]);
+       $data= $request->validated();
+
 
         // $data['user_id'] = auth()->id(); 
         $annonce = Annonce::findOrFail($id);
